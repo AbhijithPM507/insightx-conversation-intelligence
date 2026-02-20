@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Conversation Intelligence Dashboard</title>
+    <title>Enterprise Conversation Intelligence</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,8 +32,8 @@
 <label>Transcript (Optional)</label>
 <textarea id="transcript" rows="4"></textarea>
 
-<label>Upload Audio File (Optional)</label>
-<input type="file" id="audioFile" accept="audio/*">
+<label>Upload Any File (Audio / PDF / TXT / DOCX / etc.)</label>
+<input type="file" id="fileInput">
 
 <label>Domain Override (Optional)</label>
 <select id="domain">
@@ -66,32 +66,39 @@ async function analyze() {
 
     const transcript = document.getElementById("transcript").value;
     const domain = document.getElementById("domain").value;
-    const fileInput = document.getElementById("audioFile");
+    const fileInput = document.getElementById("fileInput");
 
-    let audioBase64 = null;
+    let fileBase64 = null;
+    let fileName = null;
+    let fileType = null;
 
     if (fileInput.files.length > 0) {
-        audioBase64 = await convertToBase64(fileInput.files[0]);
+        const file = fileInput.files[0];
+        fileBase64 = await convertToBase64(file);
+        fileName = file.name;
+        fileType = file.type;
     }
 
     const payload = {
         transcript: transcript || null,
-        audio_base64: audioBase64,
+        file_base64: fileBase64,
+        file_name: fileName,
+        file_type: fileType,
         client_config: {
             domain: domain || undefined,
             dev2_output: {
                 detected_domain: domain || "general",
-                summary: transcript || "Audio uploaded for processing",
+                summary: transcript || "File uploaded for processing",
                 primary_intent: "REPORT_FRAUD",
-                risk_score: 0.8,
+                risk_score: 0.7,
                 agent_analysis: {
                     tone: "Professional",
-                    empathy_level: 0.7,
+                    empathy_level: 0.6,
                     protocol_adherence: true
                 },
                 customer_analysis: {
                     tone: "Frustrated",
-                    satisfaction_score: 5
+                    satisfaction_score: 6
                 },
                 resolution_status: "PENDING",
                 key_topics: ["credit card", "fraud"],
