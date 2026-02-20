@@ -3,7 +3,7 @@ import json
 import tempfile
 from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs
-from google import genai
+import google.generativeai as genai
 
 load_dotenv()
 
