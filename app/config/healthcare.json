@@ -1,0 +1,25 @@
+{
+  "domain": "healthcare",
+  "risk_triggers": {
+    "legal_words": ["malpractice", "HIPAA", "lawsuit"],
+    "escalation_keywords": ["complaint", "legal action"],
+    "negative_sentiment_threshold": "very_negative"
+  },
+  "outcome_rules": {
+    "escalated_keywords": ["complaint", "legal"],
+    "churn_keywords": [],
+    "resolved_keywords": ["appointment scheduled", "issue resolved"],
+    "followup_keywords": ["follow up", "test results pending"]
+  },
+  "compliance_rules": {
+    "forbidden_promises": [
+      "guaranteed cure",
+      "100% recovery"
+    ]
+  },
+  "scoring_weights": {
+    "sentiment": 0.4,
+    "keywords": 0.3,
+    "intent": 0.3
+  }
+}

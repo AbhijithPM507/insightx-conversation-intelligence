@@ -7,37 +7,33 @@ router = APIRouter()
 
 @router.post("/analyze")
 def analyze(request: AnalyzeRequest):
-    """
-    Main analysis endpoint.
-    """
 
-    # 🔹 Validate domain
-    if not request.client_config or "domain" not in request.client_config:
+    # 🔹 Get AI output from Dev 2 layer
+    # Replace this with actual Dev 2 integration
+    ai_output = request.client_config.get("dev2_output")
+
+    if not ai_output:
         raise HTTPException(
             status_code=400,
-            detail="Domain must be provided inside client_config"
+            detail="Dev 2 AI output must be provided inside client_config.dev2_output"
         )
 
-    domain = request.client_config.get("domain")
+    # 🔹 Domain resolution
+    client_domain = request.client_config.get("domain") if request.client_config else None
+    detected_domain = ai_output.get("detected_domain")
 
-    # 🔹 Use transcript for now (Dev 2 AI not integrated yet)
-    if request.transcript:
-        conversation_text = request.transcript
+    if client_domain:
+        final_domain = client_domain
+    elif detected_domain:
+        final_domain = detected_domain
     else:
-        conversation_text = "Audio input received"
-
-    # 🔥 TEMPORARY AI OUTPUT (Replace when Dev 2 connects)
-    ai_output = {
-        "summary": conversation_text,
-        "sentiment": "very_negative",
-        "intents": ["cancel connection"]
-    }
+        final_domain = "general"
 
     try:
-        return run_full_analysis(ai_output, domain)
+        return run_full_analysis(ai_output, final_domain)
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal processing error")

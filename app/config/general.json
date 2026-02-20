@@ -1,0 +1,22 @@
+{
+  "domain": "general",
+  "risk_triggers": {
+    "legal_words": [],
+    "escalation_keywords": ["escalate"],
+    "negative_sentiment_threshold": "very_negative"
+  },
+  "outcome_rules": {
+    "escalated_keywords": ["escalate"],
+    "churn_keywords": [],
+    "resolved_keywords": ["resolved"],
+    "followup_keywords": ["follow up"]
+  },
+  "compliance_rules": {
+    "forbidden_promises": []
+  },
+  "scoring_weights": {
+    "sentiment": 0.4,
+    "keywords": 0.3,
+    "intent": 0.3
+  }
+}

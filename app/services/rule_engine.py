@@ -2,11 +2,6 @@ from app.services.risk_scorer import classify_risk
 
 
 def detect_compliance_violations(summary: str, config: dict):
-    """
-    Detect compliance violations based on forbidden phrases
-    defined in domain configuration.
-    """
-
     violations = []
     rules = config.get("compliance_rules", {})
 
@@ -24,40 +19,35 @@ def detect_compliance_violations(summary: str, config: dict):
 
 
 def classify_outcome(ai_output: dict, risk_level: str, config: dict):
-    """
-    Classifies call outcome based on domain-specific outcome rules.
-    """
-
     summary = ai_output.get("summary", "").lower()
+    resolution_status = ai_output.get("resolution_status", "").upper()
+
     rules = config.get("outcome_rules", {})
 
-    # Escalated
+    # Use AI resolution first if provided
+    if resolution_status in ["RESOLVED", "ESCALATED", "PENDING"]:
+        return {
+            "type": resolution_status,
+            "reason": "Derived from AI behavioral analysis"
+        }
+
     if any(word in summary for word in rules.get("escalated_keywords", [])) \
             or risk_level == "HIGH":
         return {
             "type": "ESCALATED",
-            "reason": "Escalation keyword detected or high risk"
+            "reason": "Escalation keyword or high risk detected"
         }
 
-    # Customer churn
     if any(word in summary for word in rules.get("churn_keywords", [])):
         return {
             "type": "CUSTOMER_CHURN_RISK",
             "reason": "Churn-related keyword detected"
         }
 
-    # Resolved
     if any(word in summary for word in rules.get("resolved_keywords", [])):
         return {
             "type": "RESOLVED",
             "reason": "Resolution keyword detected"
-        }
-
-    # Follow-up required
-    if any(word in summary for word in rules.get("followup_keywords", [])):
-        return {
-            "type": "FOLLOW_UP_REQUIRED",
-            "reason": "Follow-up keyword detected"
         }
 
     return {
@@ -67,32 +57,21 @@ def classify_outcome(ai_output: dict, risk_level: str, config: dict):
 
 
 def run_rule_engine(ai_output: dict, config: dict):
-    """
-    Main rule engine that:
-    - Calculates risk score
-    - Detects compliance violations
-    - Classifies outcome
-    """
 
-    sentiment = ai_output.get("sentiment", "")
-    intents = ai_output.get("intents", [])
     summary = ai_output.get("summary", "")
+    primary_intent = ai_output.get("primary_intent", "").lower()
 
     risk_score = 0
     risk_contributors = {}
 
-    # 🔹 Sentiment trigger
-    negative_threshold = config.get("risk_triggers", {}).get(
-        "negative_sentiment_threshold", ""
-    )
+    # 🔹 AI Behavioral Risk (0–1 scale → 0–3 scale)
+    ai_risk = ai_output.get("risk_score", 0)
+    ai_risk_component = round(ai_risk * 3)
 
-    if sentiment == negative_threshold:
-        risk_score += 3
-        risk_contributors["sentiment_risk"] = 3
-    else:
-        risk_contributors["sentiment_risk"] = 0
+    risk_score += ai_risk_component
+    risk_contributors["ai_behavioral_risk"] = ai_risk_component
 
-    # 🔹 Legal word trigger
+    # 🔹 Legal keyword risk
     keyword_risk = 0
     legal_words = config.get("risk_triggers", {}).get("legal_words", [])
 
@@ -103,26 +82,25 @@ def run_rule_engine(ai_output: dict, config: dict):
     risk_score += keyword_risk
     risk_contributors["keyword_risk"] = keyword_risk
 
-    # 🔹 Escalation intent trigger
+    # 🔹 Intent-based escalation risk
     intent_risk = 0
     escalation_keywords = config.get("risk_triggers", {}).get(
         "escalation_keywords", []
     )
 
-    for intent in intents:
-        if any(keyword in intent.lower() for keyword in escalation_keywords):
-            intent_risk += 2
+    if any(keyword in primary_intent for keyword in escalation_keywords):
+        intent_risk += 2
 
     risk_score += intent_risk
     risk_contributors["intent_risk"] = intent_risk
 
-    # 🔹 Classify risk
+    # 🔹 Final risk classification
     risk_level = classify_risk(risk_score)
 
-    # 🔥 Compliance detection
+    # 🔹 Compliance
     compliance_violations = detect_compliance_violations(summary, config)
 
-    # 🔥 Outcome classification
+    # 🔹 Outcome
     outcome = classify_outcome(ai_output, risk_level, config)
 
     return {
