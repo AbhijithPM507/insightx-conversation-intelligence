@@ -1,0 +1,19 @@
+{
+  "domain": "insurance",
+  "risk_triggers": {
+    "legal_words": ["IRDAI", "claim dispute", "legal notice"],
+    "escalation_keywords": ["complaint", "ombudsman"],
+    "negative_sentiment_threshold": "very_negative"
+  },
+  "outcome_rules": {
+    "escalated_keywords": ["legal notice", "ombudsman"],
+    "churn_keywords": ["cancel policy"],
+    "resolved_keywords": ["claim approved", "settlement done"],
+    "followup_keywords": ["document pending", "verification required"]
+  },
+  "scoring_weights": {
+    "sentiment": 0.4,
+    "keywords": 0.4,
+    "intent": 0.2
+  }
+}
