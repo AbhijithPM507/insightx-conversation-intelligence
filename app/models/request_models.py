@@ -15,7 +15,7 @@ class AnalyzeRequest(BaseModel):
 
     client_config: Optional[Dict[str, Any]] = Field(
         default=None,
-        description="Client-specific configuration for domain, policies, triggers, etc."
+        description="Client configuration influencing analysis"
     )
 
     @model_validator(mode="after")
