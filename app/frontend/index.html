@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conversation Intelligence Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+        textarea, select, button, input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .high { color: red; font-weight: bold; }
+        .medium { color: orange; font-weight: bold; }
+        .low { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<h2>Enterprise Conversation Intelligence</h2>
+
+<label>Transcript (Optional)</label>
+<textarea id="transcript" rows="4"></textarea>
+
+<label>Upload Audio File (Optional)</label>
+<input type="file" id="audioFile" accept="audio/*">
+
+<label>Domain Override (Optional)</label>
+<select id="domain">
+    <option value="">Auto Detect</option>
+    <option value="banking">Banking</option>
+    <option value="telecom">Telecom</option>
+    <option value="insurance">Insurance</option>
+    <option value="healthcare">Healthcare</option>
+</select>
+
+<button onclick="analyze()">Analyze</button>
+
+<div id="result"></div>
+
+<script>
+
+async function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+        };
+        reader.onerror = error => reject(error);
+    });
+}
+
+async function analyze() {
+
+    const transcript = document.getElementById("transcript").value;
+    const domain = document.getElementById("domain").value;
+    const fileInput = document.getElementById("audioFile");
+
+    let audioBase64 = null;
+
+    if (fileInput.files.length > 0) {
+        audioBase64 = await convertToBase64(fileInput.files[0]);
+    }
+
+    const payload = {
+        transcript: transcript || null,
+        audio_base64: audioBase64,
+        client_config: {
+            domain: domain || undefined,
+            dev2_output: {
+                detected_domain: domain || "general",
+                summary: transcript || "Audio uploaded for processing",
+                primary_intent: "REPORT_FRAUD",
+                risk_score: 0.8,
+                agent_analysis: {
+                    tone: "Professional",
+                    empathy_level: 0.7,
+                    protocol_adherence: true
+                },
+                customer_analysis: {
+                    tone: "Frustrated",
+                    satisfaction_score: 5
+                },
+                resolution_status: "PENDING",
+                key_topics: ["credit card", "fraud"],
+                language: "English"
+            }
+        }
+    };
+
+    const response = await fetch("http://127.0.0.1:8000/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    displayResult(data);
+}
+
+function displayResult(data) {
+
+    const riskLevel = data.risk_assessment.risk_level.toLowerCase();
+
+    document.getElementById("result").innerHTML = `
+        <div class="card">
+            <h3>Analysis</h3>
+            <p><b>Summary:</b> ${data.analysis.conversation_summary}</p>
+            <p><b>AI Risk Score:</b> ${data.analysis.ai_risk_score}</p>
+            <p><b>Primary Intent:</b> ${data.analysis.primary_intent}</p>
+        </div>
+
+        <div class="card">
+            <h3>Risk Assessment</h3>
+            <p><b>Rule Risk Score:</b> ${data.risk_assessment.rule_based_risk_score}</p>
+            <p><b>Risk Level:</b> <span class="${riskLevel}">${data.risk_assessment.risk_level}</span></p>
+            <p><b>Escalation Required:</b> ${data.risk_assessment.escalation_required}</p>
+        </div>
+
+        <div class="card">
+            <h3>Compliance</h3>
+            <p><b>Violation Count:</b> ${data.compliance.violation_count}</p>
+        </div>
+
+        <div class="card">
+            <h3>Topic Drift</h3>
+            <p><b>Drift Score:</b> ${data.topic_control.drift_score}</p>
+            <p><b>Threshold Exceeded:</b> ${data.topic_control.threshold_exceeded}</p>
+        </div>
+
+        <div class="card">
+            <h3>Outcome</h3>
+            <p><b>Type:</b> ${data.outcome.type}</p>
+            <p><b>Reason:</b> ${data.outcome.reason}</p>
+        </div>
+    `;
+}
+
+</script>
+
+</body>
+</html>
