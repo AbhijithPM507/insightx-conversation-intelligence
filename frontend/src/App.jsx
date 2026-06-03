@@ -8,27 +8,34 @@ import ConversationDetail from './pages/ConversationDetail';
 import UploadView from './pages/UploadView';
 import Settings from './pages/Settings';
 import Analytics from './pages/Analytics';
+import Login from './pages/Login';
+
+const DashboardLayout = ({ children }) => (
+  <div className="min-h-screen flex bg-background">
+    <Sidebar />
+    <main className="flex-1 ml-64 flex flex-col min-h-screen">
+      <Header />
+      <div className="flex-1 overflow-y-auto">
+        {children}
+      </div>
+    </main>
+  </div>
+);
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex bg-background">
-        <Sidebar />
+      <Routes>
+        <Route path="/login" element={<Login />} />
         
-        <main className="flex-1 ml-64 flex flex-col min-h-screen">
-          <Header />
-          <div className="flex-1 overflow-y-auto">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/conversations" element={<Conversations />} />
-              <Route path="/conversations/:id" element={<ConversationDetail />} />
-              <Route path="/live" element={<UploadView />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/settings" element={<Settings />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
+        {/* Wrapped routes with Sidebar and Header */}
+        <Route path="/" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
+        <Route path="/conversations" element={<DashboardLayout><Conversations /></DashboardLayout>} />
+        <Route path="/conversations/:id" element={<DashboardLayout><ConversationDetail /></DashboardLayout>} />
+        <Route path="/live" element={<DashboardLayout><UploadView /></DashboardLayout>} />
+        <Route path="/analytics" element={<DashboardLayout><Analytics /></DashboardLayout>} />
+        <Route path="/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
+      </Routes>
     </BrowserRouter>
   );
 }
