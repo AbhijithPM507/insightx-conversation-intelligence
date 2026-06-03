@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --color-primary-50: #18181b;
+  --color-primary-100: #27272a;
+  --color-primary-200: #3f3f46;
+  --color-primary-300: #52525b;
+  --color-primary-400: #71717a;
+  --color-primary-500: #a1a1aa;
+  --color-primary-600: #d4d4d8;
+  --color-primary-700: #e4e4e7;
+  --color-primary-800: #f4f4f5;
+  --color-primary-900: #fafafa;
+  --color-primary-950: #ffffff;
+
+  --color-accent: #ffffff; /* White text for accent */
+  --color-surface: #09090b;
+  --color-background: #000000;
+
+  --font-sans: 'Inter', sans-serif;
+}
+
+@layer base {
+  html, body {
+    @apply bg-[var(--color-background)] text-[var(--color-primary-900)] font-sans antialiased;
+    scroll-behavior: smooth;
+  }
+  
+  /* Hide scrollbar for clean look */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary-200);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-400);
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-surface/70 backdrop-blur-md border border-primary-100 shadow-[0_8px_30px_rgb(0,0,0,0.4)];
+  }
+  
+  .glass-card {
+    @apply bg-surface/90 backdrop-blur-lg border border-primary-100 shadow-[0_4px_24px_rgb(0,0,0,0.2)] rounded-2xl;
+  }
+}
