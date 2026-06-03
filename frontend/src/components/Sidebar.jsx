@@ -31,7 +31,7 @@ const Sidebar = () => {
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                 isActive 
-                  ? 'bg-accent text-white shadow-md' 
+                  ? 'bg-accent text-black shadow-md' 
                   : 'text-primary-500 hover:bg-primary-50 hover:text-accent'
               }`
             }
