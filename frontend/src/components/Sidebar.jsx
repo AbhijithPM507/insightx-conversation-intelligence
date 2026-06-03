@@ -1,9 +1,11 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Activity, Settings, PhoneCall } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, MessageSquare, Activity, Settings, PhoneCall, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+
   const navItems = [
     { name: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
     { name: 'Conversations', icon: <MessageSquare size={20} />, path: '/conversations' },
@@ -11,6 +13,11 @@ const Sidebar = () => {
     { name: 'Analytics', icon: <Activity size={20} />, path: '/analytics' },
     { name: 'Settings', icon: <Settings size={20} />, path: '/settings' },
   ];
+
+  const handleLogout = () => {
+    // Perform any logout logic here
+    navigate('/login');
+  };
 
   return (
     <motion.aside 
@@ -42,7 +49,7 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      <div className="p-6 border-t border-primary-50">
+      <div className="p-6 border-t border-primary-50 space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-semibold">
             JD
@@ -52,6 +59,13 @@ const Sidebar = () => {
             <p className="text-xs text-primary-400">Admin</p>
           </div>
         </div>
+        <button 
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-500/10 rounded-xl font-medium text-sm transition-all"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
       </div>
     </motion.aside>
   );
