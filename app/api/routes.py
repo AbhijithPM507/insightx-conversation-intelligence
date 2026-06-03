@@ -73,7 +73,7 @@ async def analyze(
 
         # 🔹 Call Dev 3 + Dev 4 integration layer
         logger.info("Running full analysis layer...")
-        result = run_full_analysis(ai_output, final_domain)
+        result = run_full_analysis(ai_output, final_domain, parsed_config)
 
         logger.info("Analysis completed successfully")
         return result

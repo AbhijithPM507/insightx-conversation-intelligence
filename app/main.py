@@ -20,7 +20,7 @@ logger.info("Starting ConvoDNA API...")
 # FastAPI App
 # -------------------------
 app = FastAPI(
-    title="ConvoDNA - Multimodal Conversation Intelligence API",
+    title="InsightX – Context-Aware Multimodal Conversation Intelligence API",
     version="1.0.0",
     description="Backend API for analyzing multimodal customer conversations"
 )
