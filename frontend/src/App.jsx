@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Conversations from './pages/Conversations';
 import ConversationDetail from './pages/ConversationDetail';
 import UploadView from './pages/UploadView';
+import Settings from './pages/Settings';
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
               <Route path="/conversations/:id" element={<ConversationDetail />} />
               <Route path="/live" element={<UploadView />} />
               <Route path="/analytics" element={<div className="p-10"><h2 className="text-2xl font-semibold text-accent">Analytics (Coming Soon)</h2></div>} />
-              <Route path="/settings" element={<div className="p-10"><h2 className="text-2xl font-semibold text-accent">Settings (Coming Soon)</h2></div>} />
+              <Route path="/settings" element={<Settings />} />
             </Routes>
           </div>
         </main>
