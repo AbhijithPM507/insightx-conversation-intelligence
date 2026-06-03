@@ -78,8 +78,8 @@ const ConversationDetail = () => {
               </div>
               
               <div className="flex gap-4 flex-row-reverse">
-                <div className="w-8 h-8 rounded-full bg-accent flex-shrink-0 flex items-center justify-center text-white font-medium text-xs">CU</div>
-                <div className="bg-white border border-primary-100 p-4 rounded-2xl rounded-tr-none shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-accent flex-shrink-0 flex items-center justify-center text-primary-950 font-medium text-xs">CU</div>
+                <div className="bg-surface border border-primary-100 p-4 rounded-2xl rounded-tr-none shadow-sm">
                   <p className="text-sm text-primary-600">Hi Jane. I'm calling because our system went down again for the second time this month. This is unacceptable, we are losing money.</p>
                 </div>
               </div>

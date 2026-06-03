@@ -43,13 +43,13 @@ const UploadView = () => {
         <div className="flex bg-primary-50/50 p-1 rounded-xl mb-6">
           <button 
             onClick={() => setInputType('audio')}
-            className={`flex-1 py-3 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-all ${inputType === 'audio' ? 'bg-white shadow-sm text-accent' : 'text-primary-400 hover:text-primary-600'}`}
+            className={`flex-1 py-3 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-all ${inputType === 'audio' ? 'bg-surface shadow-sm text-accent' : 'text-primary-400 hover:text-primary-600'}`}
           >
             <Mic size={18} /> Audio Upload
           </button>
           <button 
             onClick={() => setInputType('text')}
-            className={`flex-1 py-3 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-all ${inputType === 'text' ? 'bg-white shadow-sm text-accent' : 'text-primary-400 hover:text-primary-600'}`}
+            className={`flex-1 py-3 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition-all ${inputType === 'text' ? 'bg-surface shadow-sm text-accent' : 'text-primary-400 hover:text-primary-600'}`}
           >
             <FileText size={18} /> Text Transcript
           </button>
