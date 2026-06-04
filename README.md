@@ -1,4 +1,4 @@
-# 🌌 InsightX
+# InsightX
 
 InsightX is an **enterprise-ready, context-aware multimodal conversation intelligence API** designed to analyze customer conversations (voice or text). By leveraging advanced AI models and deterministic rule engines, InsightX generates structured intelligence including conversation summaries, sentiment analysis, intent detection, compliance risk scoring, escalation probability, and agent performance metrics.
 
