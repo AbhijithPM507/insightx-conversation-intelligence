@@ -15,7 +15,7 @@ InsightX is an **enterprise-ready, context-aware multimodal conversation intelli
 [![GitHub license](https://img.shields.io/github/license/AbhijithPM507/team-insight)](https://github.com/AbhijithPM507/team-insight)
 
 <p align="center">
-    <img src="frontend/src/assets/hero.png" alt="InsightX Web Application Dashboard" width="90%"/>
+    <img src="frontend/src/assets/screenshot.png" alt="InsightX Web Application Dashboard" width="90%"/>
 </p>
 
 ## All features
